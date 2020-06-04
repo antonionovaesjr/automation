@@ -38,7 +38,7 @@ message=$(cat $3)
 
 # Modifica o ThemeColor da mensagem de acordo com o assunto (Resolvido = Verde, Problema = Vermelho, Diferente disso = Cinza)
 recoversub='Pull Request em Aberto'
-THEMECOLOR='c62900'
+THEMECOLOR='a900c6'
 
 
 ## Construcao do JSON Payload e envio via POST para o URL do Webhook do MS Teams
