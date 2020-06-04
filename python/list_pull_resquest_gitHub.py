@@ -10,4 +10,4 @@ g = Github(TOKEN_USER)
 repo = g.get_repo(REPOSITORIO)
 pulls = repo.get_pulls(state='open', sort='created', base=BRANCH_REPO)
 for pr in pulls:
-    print("Repositório: " + str(REPOSITORIO) + " -> " + str(pr.title) + " - numero do pull request: " + str(pr.number))
+    print("Repositório: " + str(REPOSITORIO) + " -> " + str(pr.title) + " - numero do pull request: " + str(pr.number ) + "<br>" )
