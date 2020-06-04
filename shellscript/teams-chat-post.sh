@@ -26,7 +26,7 @@
 
 #Parametros de envio do CURL
 curlheader='-H "Content-Type: application/json"'
-agent='-A "ZabbixAlertScript"'
+agent='-A "DevopsAlertScript"'
 curlmaxtime='-m 60' #Timeout em segundos
 
 
@@ -54,9 +54,9 @@ payload=\""{
 		\\\"potentialAction\\\": [
     					{
       					\\\"@type\\\": \\\"OpenUri\\\",
-      					\\\"name\\\": \\\"Abrir Zabbix\\\",
+      					\\\"name\\\": \\\"Abrir Github\\\",
       					\\\"targets\\\": [
-     						{\\\"os\\\": \\\"default\\\", \\\"uri\\\": \\\"http://www.zabbix.com\\\" }
+     						{\\\"os\\\": \\\"default\\\", \\\"uri\\\": \\\"http://github.com\\\" }
       						]
     					}
   				]
