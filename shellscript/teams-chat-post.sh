@@ -1,59 +1,67 @@
-#!/bin/sh
-# =============================================================================
-#  Author: Chu-Siang Lai / chusiang (at) drx.tw
-#  Filename: teams-chat-post.sh
-#  Modified: 2018-03-28 15:04
-#  Description: Post a message to Microsoft Teams.
-#  Reference:
+#!/bin/bash
+
+#######################################################################
+#####           Script de alertas Zabbix para MS Teams            #####
+#####                                                             #####
+#####           Versao: 1.0                                       #####
+#####           Autor: Fabricio Guimaraes                         #####
+#####           Telegram: @theguima                               #####
+#####           Github: https://github.com/theguima               #####
+#####                                                             #####
+#####           Baseado no alerta via Slack abaixo                #####
+#####     https://github.com/ericoc/zabbix-slack-alertscript      #####
+#####                                                             #####
+#######################################################################
+#####                                                             #####
+#####        Valores recebidos neste script como parametro        #####
+#####                                                             #####
+##### url="$1" 		(URL do Webhook do MS Teams               #####
+##### subject="$2" 	(Assunto do alerta)                       #####
+##### message="$3"	(Mensagem de alerta enviada pelo Zabbix)  #####
+#####                                                             #####
+#######################################################################
+
+
+#Adaptado para Shell Script
+
+#Parametros de envio do CURL
+curlheader='-H "Content-Type: application/json"'
+agent='-A "ZabbixAlertScript"'
+curlmaxtime='-m 60' #Timeout em segundos
+
+
+#Parametros recebidos do Zabbix
+url="$1"
+subject="$2"
+message=$(cat $3)
+
+
+# Modifica o ThemeColor da mensagem de acordo com o assunto (Resolvido = Verde, Problema = Vermelho, Diferente disso = Cinza)
+recoversub='Pull Request em Aberto'
+THEMECOLOR='c62900'
+
+
+## Construcao do JSON Payload e envio via POST para o URL do Webhook do MS Teams
 #
-#   - https://gist.github.com/chusiang/895f6406fbf9285c58ad0a3ace13d025
-#
-# =============================================================================
+# Voce pode remover o potentialAction e o que etá dentro caso não queira do botão do Zabbix
+# Você pode alterar a URL do "abrir Zabbix para o seu Zabbix
 
-# Help.
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  echo 'Usage: teams-chat-post.sh "<webhook_url>" "<title>" "<color>" "<message>"'
-  exit 0
-fi
+payload=\""{
+		\\\"@type\\\": \\\"MessageCard\\\",
+		\\\"title\\\": \\\"${subject} \\\", 
+		\\\"text\\\": \\\"${message} \\\", 
+		\\\"themeColor\\\": \\\"${THEMECOLOR}\\\",
+		\\\"potentialAction\\\": [
+    					{
+      					\\\"@type\\\": \\\"OpenUri\\\",
+      					\\\"name\\\": \\\"Abrir Zabbix\\\",
+      					\\\"targets\\\": [
+     						{\\\"os\\\": \\\"default\\\", \\\"uri\\\": \\\"http://www.zabbix.com\\\" }
+      						]
+    					}
+  				]
+	}"\"
 
-# Webhook or Token.
-WEBHOOK_URL=$1
-if [[ "${WEBHOOK_URL}" == "" ]]
-then
-  echo "No webhook_url specified."
-  exit 1
-fi
-shift
+curldata=$(echo -d "$payload")
 
-# Title .
-TITLE=$1
-if [[ "${TITLE}" == "" ]]
-then
-  echo "No title specified."
-  exit 1
-fi
-shift
-
-# Color.
-COLOR=$1
-if [[ "${COLOR}" == "" ]]
-then
-  echo "No status specified."
-  exit 1
-fi
-shift
-
-# Text.
-TEXT=$1
-if [[ "${TEXT}" == "" ]]
-then
-  echo "No text specified."
-  exit 1
-fi
-
-# Convert formating.
-MESSAGE=$( echo ${TEXT} | sed 's/"/\"/g' | sed "s/'/\'/g" )
-JSON="{\"title\": \"${TITLE}\", \"themeColor\": \"${COLOR}\", \"text\": \"${MESSAGE}\" }"
-
-# Post to Microsoft Teams.
-curl -H "Content-Type: application/json" -d "${JSON}" "${WEBHOOK_URL}"
+eval curl $curlmaxtime $curlheader $curldata $url $agent
