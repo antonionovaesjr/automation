@@ -62,11 +62,11 @@ def lambda_handler(event, context):
         print("Ação {} não é reconhecida, valores possíveis: start ou stop".format(action_desired))
 
 
-if __name__ == "__main__":
-    #event = {"DOCDB_NAME":"labdevops-testaaaaaaa","DOCDB_ACTION":"start"}
-    event = {
-        "DOCDB_NAME":
-            ["labdevops-testaaaaaaa","labdevops-testbbbbbb","labdevops-testcccccc"]
-             ,"DOCDB_ACTION":"stop"
-            }
-    lambda_handler(event,"")
+#if __name__ == "__main__":
+#    #event = {"DOCDB_NAME":"labdevops-testaaaaaaa","DOCDB_ACTION":"start"}
+#    event = {
+#        "DOCDB_NAME":
+#            ["labdevops-testaaaaaaa","labdevops-testbbbbbb","labdevops-testcccccc"]
+#             ,"DOCDB_ACTION":"stop"
+#            }
+#    lambda_handler(event,"")
